@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crop Recommendation System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🌾 Crop Recommendation System</h1>
+            <p class="subtitle">Get intelligent crop suggestions based on soil and environmental conditions</p>
+        </header>
+
+        {% if not models_loaded %}
+        <div class="alert alert-error">
+            <strong>⚠️ Models Not Loaded!</strong>
+            <p>Please train the model first by running: <code>python model.py</code></p>
+        </div>
+        {% endif %}
+
+        <div class="main-content">
+            <div class="info-section">
+                <h2>📊 How It Works</h2>
+                <div class="info-cards">
+                    <div class="info-card">
+                        <div class="info-icon">🧪</div>
+                        <h3>Soil Analysis</h3>
+                        <p>Enter NPK values and pH levels of your soil</p>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-icon">🌡️</div>
+                        <h3>Climate Data</h3>
+                        <p>Provide temperature, humidity, and rainfall information</p>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-icon">🤖</div>
+                        <h3>AI Prediction</h3>
+                        <p>Get accurate crop recommendations using machine learning</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h2>🌱 Enter Your Data</h2>
+                <form action="/predict" method="POST" class="prediction-form">
+                    <div class="form-group-container">
+                        <div class="form-group">
+                            <label for="nitrogen">
+                                <span class="label-icon">N</span>
+                                Nitrogen (N)
+                            </label>
+                            <input type="number" id="nitrogen" name="nitrogen" 
+                                   step="0.01" required min="0" max="200"
+                                   placeholder="0-200 kg/ha">
+                            <small>Nitrogen content in soil</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="phosphorus">
+                                <span class="label-icon">P</span>
+                                Phosphorus (P)
+                            </label>
+                            <input type="number" id="phosphorus" name="phosphorus" 
+                                   step="0.01" required min="0" max="200"
+                                   placeholder="0-200 kg/ha">
+                            <small>Phosphorus content in soil</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="potassium">
+                                <span class="label-icon">K</span>
+                                Potassium (K)
+                            </label>
+                            <input type="number" id="potassium" name="potassium" 
+                                   step="0.01" required min="0" max="200"
+                                   placeholder="0-200 kg/ha">
+                            <small>Potassium content in soil</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="temperature">
+                                <span class="label-icon">🌡️</span>
+                                Temperature (°C)
+                            </label>
+                            <input type="number" id="temperature" name="temperature" 
+                                   step="0.01" required min="0" max="50"
+                                   placeholder="0-50 °C">
+                            <small>Average temperature</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="humidity">
+                                <span class="label-icon">💧</span>
+                                Humidity (%)
+                            </label>
+                            <input type="number" id="humidity" name="humidity" 
+                                   step="0.01" required min="0" max="100"
+                                   placeholder="0-100 %">
+                            <small>Relative humidity</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="ph">
+                                <span class="label-icon">⚗️</span>
+                                pH Level
+                            </label>
+                            <input type="number" id="ph" name="ph" 
+                                   step="0.01" required min="0" max="14"
+                                   placeholder="0-14">
+                            <small>Soil pH value</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="rainfall">
+                                <span class="label-icon">🌧️</span>
+                                Rainfall (mm)
+                            </label>
+                            <input type="number" id="rainfall" name="rainfall" 
+                                   step="0.01" required min="0"
+                                   placeholder="Annual rainfall">
+                            <small>Annual rainfall in mm</small>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="submit-btn" {% if not models_loaded %}disabled{% endif %}>
+                        🔍 Get Crop Recommendation
+                    </button>
+                </form>
+
+                <div class="example-section">
+                    <h3>📝 Example Values</h3>
+                    <p>Try these sample values for testing:</p>
+                    <button type="button" class="example-btn" onclick="fillExample('rice')">
+                        🍚 Use Example Data (Rice)
+                    </button>
+                    <button type="button" class="example-btn" onclick="fillExample('wheat')">
+                        🌾 Use Example Data (Wheat)
+                    </button>
+                    <button type="button" class="example-btn" onclick="fillExample('maize')">
+                        🌽 Use Example Data (Maize)
+                    </button>
+                    <button type="button" class="example-btn" onclick="fillExample('cotton')">
+                        🧵 Use Example Data (Cotton)
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>Powered by Machine Learning | Random Forest Classifier</p>
+            <p class="footer-note">© 2024 Crop Recommendation System</p>
+        </footer>
+    </div>
+
+    <script>
+        function fillExample(crop) {
+            const data = {
+                rice: { nitrogen: 90, phosphorus: 42, potassium: 43, temperature: 24, humidity: 82, ph: 6.5, rainfall: 200 },
+                wheat: { nitrogen: 120, phosphorus: 55, potassium: 40, temperature: 18, humidity: 65, ph: 6.8, rainfall: 90 },
+                maize: { nitrogen: 100, phosphorus: 50, potassium: 45, temperature: 26, humidity: 70, ph: 6.4, rainfall: 120 },
+                cotton: { nitrogen: 110, phosphorus: 40, potassium: 38, temperature: 28, humidity: 60, ph: 7.2, rainfall: 85 }
+            };
+
+            const values = data[crop];
+            for (const key in values) {
+                document.getElementById(key).value = values[key];
+            }
+        }
+    </script>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

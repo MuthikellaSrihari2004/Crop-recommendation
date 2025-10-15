@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prediction Result - Crop Recommendation</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🌾 Crop Recommendation System</h1>
+            <p class="subtitle">Your Prediction Results</p>
+        </header>
+
+        <div class="result-content">
+            {% if error %}
+            <div class="alert alert-error">
+                <h2>❌ Error</h2>
+                <p>{{ error }}</p>
+                <a href="/" class="back-btn">← Go Back</a>
+            </div>
+            {% else %}
+            <div class="result-card success">
+                <div class="result-header">
+                    <h2>🎯 Recommended Crop</h2>
+                </div>
+                
+                <div class="crop-result">
+                    <div class="crop-name">{{ crop }}</div>
+                    <div class="confidence-badge">
+                        <span class="confidence-label">Confidence:</span>
+                        <span class="confidence-value">{{ confidence }}%</span>
+                    </div>
+                </div>
+
+                <div class="crop-details">
+                    <div class="detail-item">
+                        <strong>📝 Description:</strong>
+                        <p>{{ description }}</p>
+                    </div>
+                    <div class="detail-item">
+                        <strong>📅 Best Season:</strong>
+                        <p>{{ season }}</p>
+                    </div>
+                    <div class="detail-item">
+                        <strong>⏱️ Growing Duration:</strong>
+                        <p>{{ duration }}</p>
+                    </div>
+                </div>
+
+                {% if alternatives %}
+                <div class="alternatives-section">
+                    <h3>🔄 Alternative Recommendations</h3>
+                    <div class="alternatives-grid">
+                        {% for alt in alternatives %}
+                        <div class="alternative-card">
+                            <div class="alt-crop-name">{{ alt.name.title() }}</div>
+                            <div class="alt-confidence">{{ alt.confidence }}% match</div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <div class="input-summary">
+                    <h3>📊 Your Input Data</h3>
+                    <div class="input-grid">
+                        {% for key, value in inputs.items() %}
+                        <div class="input-item">
+                            <span class="input-label">{{ key }}:</span>
+                            <span class="input-value">{{ value }}</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <a href="/" class="back-btn primary">🔄 Try Another Prediction</a>
+                    <button onclick="window.print()" class="print-btn">🖨️ Print Results</button>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <footer>
+            <p>Powered by Machine Learning | Random Forest Classifier</p>
+            <p class="footer-note">© 2024 Crop Recommendation System</p>
+        </footer>
+    </div>
+
+    <style>
+        @media print {
+            .action-buttons, header, footer { display: none; }
+            .result-card { box-shadow: none; border: 1px solid #ddd; }
+        }
+    </style>
+</body>
+</html>
