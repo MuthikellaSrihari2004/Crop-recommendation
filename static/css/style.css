@@ -235,18 +235,40 @@ header h1 {
     color: var(--dark-color);
     margin-bottom: 10px;
 }
-
-.example-btn {
+/* Example buttons container */
+.example-buttons {
+    display: flex;
+    justify-content: space-between; /* evenly space buttons */
+    flex-wrap: wrap; /* wrap if screen is small */
+    gap: 10px; /* spacing between buttons */
     margin-top: 10px;
-    padding: 10px 20px;
-    background: var(--accent-color);
-    color: white;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 0.95rem;
-    transition: background 0.3s ease;
 }
+
+/* Individual example buttons */
+.example-btn {
+    flex: 1 1 30%; /* each button takes ~30% of row, adjust as needed */
+    min-width: 120px; /* ensure buttons don't shrink too much */
+    padding: 12px 16px;
+    font-size: 16px;
+    border-radius: 8px;
+    border: none;
+    background-color: #4CAF50; /* green button */
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+/* Hover effect */
+.example-btn:hover {
+    background-color: #45a049;
+    transform: translateY(-2px);
+}
+
+
+
+
+
 
 .example-btn:hover {
     background: #2980b9;
